@@ -9,9 +9,10 @@
  * This work is licensed under the terms of the GNU LGPL, version 2.1 or later.
  * See the COPYING file in the top-level directory.
  */
-#include "config.h"
 
 #include <glib.h>
+
+#include "common.h"
 
 /*
  * NSS headers
@@ -1470,7 +1471,7 @@ vcard_emul_read_object(VCard *card, const char *label,
         return NULL;
 
     *ret_len = result.len;
-    ret = g_memdup(result.data, result.len);
+    ret = g_memdup2(result.data, result.len);
     PORT_Free(result.data);
     return ret;
 }

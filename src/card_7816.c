@@ -352,7 +352,7 @@ vcard_apdu_new(unsigned char *raw_apdu, int len, vcard_7816_status_t *status)
     }
 
     new_apdu = g_new(VCardAPDU, 1);
-    new_apdu->a_data = g_memdup(raw_apdu, len);
+    new_apdu->a_data = g_memdup2(raw_apdu, len);
     new_apdu->a_len = len;
     *status = vcard_apdu_set_class(new_apdu);
     if (*status != VCARD7816_STATUS_SUCCESS) {

@@ -26,9 +26,15 @@
 
 #include <stddef.h>
 
+#include "config.h"
+
 unsigned char *ushort2lebytes(unsigned char *buf, unsigned short x);
 unsigned short lebytes2ushort(const unsigned char *buf);
 
 char *hex_dump(const unsigned char *buf, size_t buflen);
+
+#ifndef HAVE_G_MEMDUP2
+#define g_memdup2(ptr,sz) ((G_LIKELY(((guint64)(sz)) < G_MAXUINT)) ? g_memdup(ptr,sz) : (g_abort(), NULL))
+#endif
 
 #endif

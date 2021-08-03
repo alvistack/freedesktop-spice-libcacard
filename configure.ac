@@ -33,8 +33,15 @@ PKG_PROG_PKG_CONFIG
 AX_COMPILER_FLAGS([WARN_CFLAGS],[WARN_LDFLAGS])
 AX_CODE_COVERAGE()
 
-PKG_CHECK_MODULES(GLIB2, [glib-2.0 >= 2.32])
 PKG_CHECK_MODULES(CACARD, [nss >= 3.12.8])
+
+PKG_CHECK_MODULES(GLIB2, glib-2.0 >= 2.68, [
+	AC_DEFINE_UNQUOTED(HAVE_G_MEMDUP2, 1,
+			[Define to 1 if you have the 'g_memdup2' function.])
+], [
+	PKG_CHECK_MODULES(GLIB2, glib-2.0 >= 2.32,,
+				AC_MSG_ERROR(GLib >= 2.32 is required))
+])
 
 dnl === --enable-pcsc ==========================================================
 

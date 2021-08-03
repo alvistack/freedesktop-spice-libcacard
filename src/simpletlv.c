@@ -292,7 +292,7 @@ simpletlv_clone(struct simpletlv_member *tlv, size_t tlvlen)
             if (new[i].value.child == NULL)
                 goto failure;
         } else {
-            new[i].value.value = g_memdup(tlv[i].value.value, tlv[i].length);
+            new[i].value.value = g_memdup2(tlv[i].value.value, tlv[i].length);
         }
     }
     return new;
@@ -332,7 +332,7 @@ simpletlv_parse(unsigned char *data, size_t data_len, size_t *outtlv_len)
 
         tlvp.tag = tag;
         tlvp.length = vlen;
-        tlvp.value.value = g_memdup(p, vlen);
+        tlvp.value.value = g_memdup2(p, vlen);
         tlvp.type = SIMPLETLV_TYPE_LEAF;
         g_array_append_val(tlv, tlvp);
 

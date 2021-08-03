@@ -466,7 +466,7 @@ do_socket_read(GIOChannel *source,
 #if defined(ENABLE_PCSC)
             if (with_pcsc) {
                 reply_size = dwRecvLength;
-                reply = g_memdup(pbRecvBuffer, reply_size);
+                reply = g_memdup2(pbRecvBuffer, reply_size);
 
                 dwSendLength = mhHeader.length;
                 dwRecvLength = sizeof(pbRecvBuffer);

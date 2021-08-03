@@ -12,6 +12,13 @@ cxx = meson.get_compiler('cpp')
 static_dep = (get_option('default_library') == 'static')
 
 glib_dep = dependency('glib-2.0', version: '>= 2.32', static: static_dep)
+
+core_conf = configuration_data()
+if glib_dep.version().version_compare('>= 2.68')
+  core_conf.set('HAVE_G_MEMDUP2', 1)
+endif
+
+
 nss_dep = dependency('nss', version: '>= 3.12.8', static: static_dep)
 
 pcsc_dep = dependency('libpcsclite', required: get_option('pcsc'))
@@ -52,6 +59,7 @@ libcacard_src = [
 
 if pcsc_dep.found()
   libcacard_src += 'src/capcsc.c'
+  core_conf.set('ENABLE_PCSC', 1)
 endif
 
 mapfile = 'src/libcacard.map'
@@ -77,9 +85,7 @@ executable('vscclient', 'src/vscclient.c', dependencies: [libcacard_dep])
 
 configure_file(
   output: 'config.h',
-  configuration: {
-    'ENABLE_PCSC': pcsc_dep.found(),
-  },
+  configuration: core_conf,
 )
 
 pc = import('pkgconfig')

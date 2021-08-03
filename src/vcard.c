@@ -12,6 +12,7 @@
 #include "vcard.h"
 #include "vcard_emul.h"
 #include "card_7816t.h"
+#include "common.h"
 
 struct VCardAppletStruct {
     VCardApplet   *next;
@@ -43,7 +44,7 @@ vcard_buffer_response_new(const unsigned char *buffer, int size)
     VCardBufferResponse *new_buffer;
 
     new_buffer = g_new(VCardBufferResponse, 1);
-    new_buffer->buffer = (unsigned char *)g_memdup(buffer, size);
+    new_buffer->buffer = (unsigned char *)g_memdup2(buffer, size);
     new_buffer->buffer_len = size;
     new_buffer->current = new_buffer->buffer;
     new_buffer->len = size;
@@ -108,7 +109,7 @@ vcard_new_applet(VCardProcessAPDU applet_process_function,
     applet->process_apdu = applet_process_function;
     applet->reset_applet = applet_reset_function;
 
-    applet->aid = g_memdup(aid, aid_len);
+    applet->aid = g_memdup2(aid, aid_len);
     applet->aid_len = aid_len;
     return applet;
 }
