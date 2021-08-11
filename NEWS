@@ -1,3 +1,11 @@
+v2.8.1
+======
+ - Improve CI and build scripts
+ - Execute tests also with token not supporting raw RSA
+ - Run fuzzers in CI
+ - Unbreak RAW deciphering emulation using RSA-PKCS1 method
+ - Use g_memdup2 to avoid deprecation warnings with new glib2
+
 v2.8.0
 ======
  - Improve project documentation
