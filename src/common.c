@@ -79,4 +79,18 @@ hex_dump(const unsigned char *buf, size_t buflen)
     *--p = '\x00';
     return start;
 }
+
+#if !GLIB_CHECK_VERSION(2,68,0)
+void* g_memdup2(const void *ptr, size_t size)
+{
+    void *dst = NULL;
+
+    if (ptr && size != 0) {
+        dst = g_malloc(size);
+        memcpy(dst, ptr, size);
+    }
+    return dst;
+}
+#endif
+
 /* vim: set ts=4 sw=4 tw=0 noet expandtab: */
