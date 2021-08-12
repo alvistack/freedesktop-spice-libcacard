@@ -24,6 +24,7 @@
 #include "config.h"
 
 #include <stdio.h>
+#include <string.h>
 
 #include "vcard.h"
 #include "common.h"
