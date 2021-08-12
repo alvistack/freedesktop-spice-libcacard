@@ -168,6 +168,7 @@ EXTRA_DIST +=					\
 	tests/db/cert9.db                       \
 	tests/db/key4.db                        \
 	tests/db/pkcs11.txt                     \
+	tests/db.crypt                          \
 	tests/cert.cfg				\
 	fuzz/corpora/fuzz_options/test		\
 	fuzz/corpora/fuzz_simpletlv/test	\
@@ -175,6 +176,9 @@ EXTRA_DIST +=					\
 	fuzz/db					\
 	$(MESON_FILES)				\
 	$(NULL)
+DISTCLEANFILES =				\
+	tests/01.crypt				\
+	tests/softhsm2-no-raw.conf
 
 # aclocal will copy m4 files from pkg-config/autoconf-archives
 MAINTAINERCLEANFILES +=	$(srcdir)/m4/pkg.m4
