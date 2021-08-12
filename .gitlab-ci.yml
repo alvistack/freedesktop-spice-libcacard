@@ -33,6 +33,14 @@ Ubuntu build:
     - ./autogen.sh
     - make
 
+Ubuntu 16.04 build (oss-fuzz):
+  extends: .ubuntu
+  image: ubuntu:16.04
+  stage: build
+  script:
+    - ./autogen.sh
+    - make
+
 .centos7:
   image: centos:7
   before_script:
