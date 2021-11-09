@@ -85,8 +85,7 @@ configure_file(
 pc = import('pkgconfig')
 pc.generate(
   libraries: libcacard,
-  requires: ['glib-2.0'],
-  requires_private: ['nss'],
+  requires_private: ['glib-2.0'],
   subdirs: 'cacard',
   version: meson.project_version(),
   name: 'cacard',
