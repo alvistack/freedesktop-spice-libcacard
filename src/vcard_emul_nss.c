@@ -706,8 +706,9 @@ vcard_emul_mirror_card(VReader *vreader)
      * us the real certs until we log in.
      */
     PK11GenericObject *firstObj, *thisObj;
-    int cert_count;
+    int cert_count, i;
     unsigned char **certs;
+    SECItem **ids;
     int *cert_len;
     VCardKey **keys;
     PK11SlotInfo *slot;
@@ -734,12 +735,13 @@ vcard_emul_mirror_card(VReader *vreader)
 
     /* allocate the arrays */
     vcard_emul_alloc_arrays(&certs, &cert_len, &keys, cert_count);
+    ids = g_new(SECItem *, cert_count);
 
     /* fill in the arrays */
-    cert_count = 0;
+    cert_count = i = 0;
     for (thisObj = firstObj; thisObj;
                              thisObj = PK11_GetNextGenericObject(thisObj)) {
-        SECItem derCert;
+        SECItem derCert, *id;
         CERTCertificate *cert;
         SECStatus rv;
 
@@ -749,22 +751,48 @@ vcard_emul_mirror_card(VReader *vreader)
         if (rv != SECSuccess) {
             continue;
         }
+        /* Read ID and try to sort by this to get reproducible results
+         * in case of underlying pkcs11 module does not provide it */
+        id = SECITEM_AllocItem(NULL, NULL, 0);
+        rv = PK11_ReadRawAttribute(PK11_TypeGeneric, thisObj, CKA_ID, id);
+        if (rv != SECSuccess) {
+            SECITEM_FreeItem(&derCert, PR_FALSE);
+            SECITEM_FreeItem(id, PR_TRUE);
+            continue;
+        }
         /* create floating temp cert. This gives us a cert structure even if
          * the token isn't logged in */
         cert = CERT_NewTempCertificate(CERT_GetDefaultCertDB(), &derCert,
                                        NULL, PR_FALSE, PR_TRUE);
         SECITEM_FreeItem(&derCert, PR_FALSE);
         if (cert == NULL) {
+            SECITEM_FreeItem(id, PR_TRUE);
             continue;
         }
 
-        certs[cert_count] = cert->derCert.data;
-        cert_len[cert_count] = cert->derCert.len;
-        keys[cert_count] = vcard_emul_make_key(slot, cert);
+        for (i = 0; i < cert_count; i++) {
+            if (SECITEM_CompareItem(id, ids[i]) < SECEqual) {
+                /* Make space for the item here, move the rest of the items */
+                memmove(&certs[i + 1], &certs[i], (cert_count - i) * sizeof(certs[0]));
+                memmove(&cert_len[i + 1], &cert_len[i], (cert_count - i) * sizeof(cert_len[0]));
+                memmove(&keys[i + 1], &keys[i], (cert_count - i) * sizeof(keys[0]));
+                memmove(&ids[i + 1], &ids[i], (cert_count - i) * sizeof(ids[0]));
+                break;
+            }
+        }
+        certs[i] = cert->derCert.data;
+        cert_len[i] = cert->derCert.len;
+        keys[i] = vcard_emul_make_key(slot, cert);
+        ids[i] = id;
         cert_count++;
         CERT_DestroyCertificate(cert); /* key obj still has a reference */
     }
     PK11_DestroyGenericObjects(firstObj);
+    /* No longer needed */
+    for (i = 0; i < cert_count; i++) {
+        SECITEM_FreeItem(ids[i], PR_TRUE);
+    }
+    g_free(ids);
 
     /* now create the card */
     card = vcard_emul_make_card(vreader, certs, cert_len, keys, cert_count);
