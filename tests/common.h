@@ -17,12 +17,13 @@
 
 enum {
     TEST_PKI = 1,
-    TEST_CCC = 2,
-    TEST_ACA = 3,
-    TEST_GENERIC = 4,
-    TEST_EMPTY_BUFFER = 5,
-    TEST_EMPTY = 6,
-    TEST_PASSTHROUGH = 7,
+    TEST_PKI_2,
+    TEST_CCC,
+    TEST_ACA,
+    TEST_GENERIC,
+    TEST_EMPTY_BUFFER,
+    TEST_EMPTY,
+    TEST_PASSTHROUGH,
 };
 
 void select_coid_good(VReader *reader, unsigned char *coid);
@@ -40,7 +41,7 @@ void read_buffer(VReader *reader, uint8_t type, int object_type);
 
 void do_sign(VReader *reader, int parts);
 
-void do_decipher(VReader *reader);
+void do_decipher(VReader *reader, int type);
 
 void test_empty_applets(void);
 

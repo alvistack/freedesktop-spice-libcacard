@@ -256,6 +256,17 @@ static void test_sign(void)
     /* test also multipart signatures */
     do_sign(reader, 1);
 
+    /* select the second PKI */
+    select_applet(reader, TEST_PKI_2);
+
+    /* get properties to figure out the key length */
+    get_properties(reader, TEST_PKI_2);
+
+    do_sign(reader, 0);
+
+    /* test also multipart signatures */
+    do_sign(reader, 1);
+
     vreader_free(reader); /* get by id ref */
 }
 
@@ -281,7 +292,15 @@ static void test_decipher(void)
     /* get properties to figure out the key length */
     get_properties(reader, TEST_PKI);
 
-    do_decipher(reader);
+    do_decipher(reader, TEST_PKI);
+
+    /* select the second PKI */
+    select_applet(reader, TEST_PKI_2);
+
+    /* get properties to figure out the key length */
+    get_properties(reader, TEST_PKI_2);
+
+    do_decipher(reader, TEST_PKI_2);
 
     vreader_free(reader); /* get by id ref */
 }
@@ -318,7 +337,7 @@ static void test_sign_bad_data_x509(void)
 0x00 /* <-- [Le] */
     };
     int sign_len = sizeof(sign);
-    int key_bits = getBits();
+    int key_bits;
 
     g_assert_nonnull(reader);
 
@@ -328,6 +347,10 @@ static void test_sign_bad_data_x509(void)
         g_test_skip("No physical card found");
         return;
     }
+
+    /* get properties to figure out the key length */
+    select_applet(reader, TEST_PKI);
+    get_properties(reader, TEST_PKI);
 
     /* run the actual test */
 

@@ -515,6 +515,25 @@ static void test_cac_pki(void)
     vreader_free(reader); /* get by id ref */
 }
 
+static void test_cac_pki_2(void)
+{
+    VReader *reader = vreader_get_reader_by_id(0);
+
+    /* select the first PKI applet */
+    select_applet(reader, TEST_PKI_2);
+
+    /* get properties */
+    get_properties(reader, TEST_PKI_2);
+
+    /* get the TAG buffer length */
+    read_buffer(reader, CAC_FILE_TAG, TEST_PKI_2);
+
+    /* get the VALUE buffer length */
+    read_buffer(reader, CAC_FILE_VALUE, TEST_PKI_2);
+
+    vreader_free(reader); /* get by id ref */
+}
+
 static void test_cac_ccc(void)
 {
     VReader *reader = vreader_get_reader_by_id(0);
@@ -579,6 +598,14 @@ static void test_sign(void)
     /* test also multipart signatures */
     do_sign(reader, 1);
 
+    /* select the second PKI */
+    select_applet(reader, TEST_PKI_2);
+
+    do_sign(reader, 0);
+
+    /* test also multipart signatures */
+    do_sign(reader, 1);
+
     vreader_free(reader); /* get by id ref */
 }
 
@@ -594,7 +621,12 @@ static void test_decipher(void)
     /* select the PKI */
     select_applet(reader, TEST_PKI);
 
-    do_decipher(reader);
+    do_decipher(reader, TEST_PKI);
+
+    /* select the PKI */
+    select_applet(reader, TEST_PKI_2);
+
+    do_decipher(reader, TEST_PKI_2);
 
     vreader_free(reader); /* get by id ref */
 }
@@ -925,6 +957,7 @@ static void test_invalid_read_buffer(void)
 
     test_invalid_read_buffer_applet(reader, TEST_CCC);
     test_invalid_read_buffer_applet(reader, TEST_PKI);
+    test_invalid_read_buffer_applet(reader, TEST_PKI_2);
     test_invalid_read_buffer_applet(reader, TEST_PASSTHROUGH);
     test_invalid_read_buffer_applet(reader, TEST_EMPTY);
 
@@ -1122,6 +1155,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/libcacard/xfer", test_xfer);
     g_test_add_func("/libcacard/select-coid", test_select_coid);
     g_test_add_func("/libcacard/cac-pki", test_cac_pki);
+    g_test_add_func("/libcacard/cac-pki-2", test_cac_pki_2);
     g_test_add_func("/libcacard/cac-ccc", test_cac_ccc);
     g_test_add_func("/libcacard/cac-aca", test_cac_aca);
     g_test_add_func("/libcacard/get-response", test_get_response);

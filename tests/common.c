@@ -192,7 +192,7 @@ void get_properties_coid(VReader *reader, const unsigned char coid[2],
 
                 case 0x43: /* PKI properties */
                     g_assert_cmphex(p2[0], ==, 0x06);
-                    if (hw_tests) {
+                    if (hw_tests && object_type == TEST_PKI) {
                         /* Assuming CAC card with 1024 b RSA keys */
                         key_bits = 1024;
                     } else {
@@ -248,7 +248,7 @@ void get_properties_coid(VReader *reader, const unsigned char coid[2],
         g_assert_cmpint(num_objects_expected, ==, 0);
     }
 
-    if (object_type == TEST_PKI) {
+    if (object_type == TEST_PKI || object_type == TEST_PKI_2) {
         g_assert_cmpint(verified_pki_properties, ==, 1);
     }
 
@@ -307,9 +307,14 @@ void get_properties(VReader *reader, int object_type)
     unsigned char coid[2];
     switch (object_type) {
     case TEST_PKI:
-        // XXX only the first PKI for now
         coid[0] = 0x01;
         coid[1] = 0x00;
+        get_properties_coid(reader, coid, object_type);
+        break;
+
+    case TEST_PKI_2:
+        coid[0] = 0x01;
+        coid[1] = 0x01;
         get_properties_coid(reader, coid, object_type);
         break;
 
@@ -426,6 +431,10 @@ void select_applet(VReader *reader, int type)
         /* Select first PKI Applet */
         0xa0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x00
     };
+    uint8_t selfile_pki_2[] = {
+        /* Select second PKI Applet */
+        0xa0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x01
+    };
     uint8_t selfile_passthrough[] = {
         /* Select Person Instance (passthrough) */
         0xa0, 0x00, 0x00, 0x00, 0x79, 0x02, 0x00
@@ -440,6 +449,11 @@ void select_applet(VReader *reader, int type)
     case TEST_PKI:
         aid = selfile_pki;
         aid_len = sizeof(selfile_pki);
+        break;
+
+    case TEST_PKI_2:
+        aid = selfile_pki_2;
+        aid_len = sizeof(selfile_pki_2);
         break;
 
     case TEST_CCC:
@@ -562,7 +576,7 @@ void do_sign(VReader *reader, int parts)
 
 }
 
-void do_decipher(VReader *reader)
+void do_decipher(VReader *reader, int type)
 {
     VReaderStatus status;
     int dwRecvLength = APDUBufSize;
@@ -589,14 +603,30 @@ void do_decipher(VReader *reader)
 
     /* Read the encrypted file */
     if (hw_tests) {
-        filename = g_test_build_filename(G_TEST_BUILT, "01.crypt", NULL);
+        const char *name;
+        if (type == TEST_PKI) {
+            name = "01.crypt";
+        } else if (type == TEST_PKI_2) {
+            name = "02.crypt";
+        } else {
+            g_assert_not_reached();
+        }
+        filename = g_test_build_filename(G_TEST_BUILT, name, NULL);
     } else {
         /* Generated from existing db using:
          * echo "1234567890" > data
          * certutil -L -d sql:$PWD/tests/db/ -n cert1 -r > tests/db.cert
          * openssl rsautl -encrypt -inkey "tests/db.cert" -keyform DER -certin -in data -out "tests/db.crypt"
          */
-        filename = g_test_build_filename(G_TEST_DIST, "db.crypt", NULL);
+        const char *name;
+        if (type == TEST_PKI) {
+            name = "db.crypt";
+        } else if (type == TEST_PKI_2) {
+            name = "db2.crypt";
+        } else {
+            g_assert_not_reached();
+        }
+        filename = g_test_build_filename(G_TEST_DIST, name, NULL);
     }
     if (!g_file_get_contents(filename, &ciphertext, &ciphertext_len, NULL)) {
         g_test_skip("The encrypted file not found");
