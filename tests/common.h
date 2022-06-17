@@ -1,7 +1,7 @@
 /*
  * Shared test functions for libCACard
  *
- * Copyright 2018 Red Hat, Inc.
+ * Copyright 2018 - 2022 Red Hat, Inc.
  *
  * Author: Jakub Jelen <jjelen@redhat.com>
  *
@@ -15,7 +15,7 @@
 
 #define APDUBufSize 270
 
-enum {
+enum TestObjectType {
     TEST_PKI = 1,
     TEST_PKI_2,
     TEST_CCC,
@@ -32,16 +32,16 @@ void select_coid_bad(VReader *reader, unsigned char *coid);
 int select_aid_response(VReader *reader, unsigned char *aid,
                         unsigned int aid_len, int response);
 void select_aid(VReader *reader, unsigned char *aid, unsigned int aid_len);
-void select_applet(VReader *reader, int type);
+void select_applet(VReader *reader, enum TestObjectType type);
 
-void get_properties_coid(VReader *reader, const unsigned char coid[2], int object_type);
-void get_properties(VReader *reader, int object_type);
+void get_properties_coid(VReader *reader, const unsigned char coid[2], enum TestObjectType object_type);
+void get_properties(VReader *reader, enum TestObjectType object_type);
 
-void read_buffer(VReader *reader, uint8_t type, int object_type);
+void read_buffer(VReader *reader, uint8_t type, enum TestObjectType object_type);
 
 void do_sign(VReader *reader, int parts);
 
-void do_decipher(VReader *reader, int type);
+void do_decipher(VReader *reader, enum TestObjectType object_type);
 
 void test_empty_applets(void);
 

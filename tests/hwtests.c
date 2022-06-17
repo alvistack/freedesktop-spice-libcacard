@@ -1,7 +1,7 @@
 /*
  * Test mirroring of CAC smart card
  *
- * Copyright 2018 Red Hat, Inc.
+ * Copyright 2018 - 2022 Red Hat, Inc.
  *
  * Author: Jakub Jelen <jjelen@redhat.com>
  *

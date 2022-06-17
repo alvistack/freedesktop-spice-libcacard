@@ -1,7 +1,7 @@
 /*
  * Test general functionality of software emulated smart card
  *
- * Copyright 2018 Red Hat, Inc.
+ * Copyright 2018 - 2022 Red Hat, Inc.
  *
  * Authors:
  *  Marc-André Lureau <marcandre.lureau@redhat.com>
@@ -874,7 +874,7 @@ static void test_invalid_instruction(void)
     vreader_free(reader); /* get by id ref */
 }
 
-static void test_invalid_read_buffer_applet(VReader *reader, int object_type)
+static void test_invalid_read_buffer_applet(VReader *reader, enum TestObjectType object_type)
 {
 
     VReaderStatus status;

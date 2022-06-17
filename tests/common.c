@@ -1,7 +1,7 @@
 /*
  * Shared test functions for libCACard
  *
- * Copyright 2018 Red Hat, Inc.
+ * Copyright 2018 - 2022 Red Hat, Inc.
  *
  * Author: Jakub Jelen <jjelen@redhat.com>
  *
@@ -98,7 +98,7 @@ void select_aid(VReader *reader, unsigned char *aid, unsigned int aid_len)
 }
 
 void get_properties_coid(VReader *reader, const unsigned char coid[2],
-                         int object_type)
+                         enum TestObjectType object_type)
 {
     int dwRecvLength = APDUBufSize;
     VReaderStatus status;
@@ -302,7 +302,7 @@ void get_properties_coid(VReader *reader, const unsigned char coid[2],
 
 }
 
-void get_properties(VReader *reader, int object_type)
+void get_properties(VReader *reader, enum TestObjectType object_type)
 {
     unsigned char coid[2];
     switch (object_type) {
@@ -330,13 +330,17 @@ void get_properties(VReader *reader, int object_type)
         get_properties_coid(reader, coid, object_type);
         break;
 
+    case TEST_GENERIC:
+    case TEST_EMPTY_BUFFER:
+    case TEST_EMPTY:
+    case TEST_PASSTHROUGH:
     default:
         g_debug("Got unknown object type");
         g_assert_not_reached();
     }
 }
 
-void read_buffer(VReader *reader, uint8_t type, int object_type)
+void read_buffer(VReader *reader, uint8_t type, enum TestObjectType object_type)
 {
     int dwRecvLength = APDUBufSize, dwLength, dwReadLength, offset, left;
     VReaderStatus status;
@@ -417,7 +421,7 @@ void read_buffer(VReader *reader, uint8_t type, int object_type)
     g_free(data);
 }
 
-void select_applet(VReader *reader, int type)
+void select_applet(VReader *reader, enum TestObjectType type)
 {
     uint8_t selfile_ccc[] = {
         /* Select CCC Applet */
@@ -476,6 +480,8 @@ void select_applet(VReader *reader, int type)
         aid_len = sizeof(selfile_empty);
         break;
 
+    case TEST_GENERIC:
+    case TEST_EMPTY_BUFFER:
     default:
         g_assert_not_reached();
     }
@@ -576,7 +582,7 @@ void do_sign(VReader *reader, int parts)
 
 }
 
-void do_decipher(VReader *reader, int type)
+void do_decipher(VReader *reader, enum TestObjectType type)
 {
     VReaderStatus status;
     int dwRecvLength = APDUBufSize;
