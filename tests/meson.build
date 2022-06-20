@@ -11,6 +11,19 @@ modutil_dep = find_program('modutil', required: false)
 openssl_dep = find_program('openssl', required: false)
 softhsm_util_dep = find_program('softhsm2-util', required: false)
 
+unit_cac_test = executable(
+  'unit_cac',
+  ['unit_cac.c'],
+  objects: libcacard.extract_objects('src/simpletlv.c', 'src/common.c'),
+  dependencies: [libcacard_dep],
+)
+
+test(
+  'unit_cac',
+  unit_cac_test,
+  env: env,
+)
+
 libcacard_test = executable(
   'libcacard',
   ['libcacard.c', 'common.c'],

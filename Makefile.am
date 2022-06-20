@@ -86,10 +86,18 @@ AM_TESTS_ENVIRONMENT += \
 	SOFTHSM2_CONF=tests/softhsm2.conf
 
 test_programs =					\
+	tests/unit_cac				\
 	tests/libcacard				\
 	tests/simpletlv				\
 	tests/hwtests				\
 	tests/initialize			\
+	$(NULL)
+
+tests_unit_cac_LDADD =				\
+	$(GLIB2_LIBS)				\
+	libcacard.la				\
+	src/common.lo				\
+	src/simpletlv.lo			\
 	$(NULL)
 
 tests_libcacard_SOURCES =			\
