@@ -964,6 +964,87 @@ static void test_invalid_read_buffer(void)
     vreader_free(reader); /* get by id ref */
 }
 
+static void test_invalid_update_buffer_applet(VReader *reader, enum TestObjectType object_type)
+{
+
+    VReaderStatus status;
+    int dwRecvLength = APDUBufSize;
+    uint8_t pbRecvBuffer[APDUBufSize];
+    uint8_t apdu[] = {
+        0x00, 0x58, 0x00, 0x00, 0x00
+    };
+    int apdu_len = 5;
+
+    select_applet(reader, object_type);
+
+    /* Update buffer is not supported */
+    status = vreader_xfr_bytes(reader,
+                               apdu, apdu_len,
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    if (object_type == TEST_PKI || object_type == TEST_PKI_2) {
+        g_assert_cmpint(pbRecvBuffer[0], ==, 0x69);
+        g_assert_cmpint(pbRecvBuffer[1], ==, 0x85);
+    } else {
+        g_assert_cmpint(pbRecvBuffer[0], ==, 0x69);
+        g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);
+    }
+}
+
+static void test_invalid_update_buffer(void)
+{
+    VReader *reader = vreader_get_reader_by_id(0);
+
+    g_assert_nonnull(reader);
+
+    test_invalid_update_buffer_applet(reader, TEST_CCC);
+    test_invalid_update_buffer_applet(reader, TEST_PKI);
+    test_invalid_update_buffer_applet(reader, TEST_PKI_2);
+    test_invalid_update_buffer_applet(reader, TEST_PASSTHROUGH);
+    test_invalid_update_buffer_applet(reader, TEST_EMPTY);
+
+    vreader_free(reader); /* get by id ref */
+}
+
+static void test_invalid_sign(void)
+{
+    VReader *reader = vreader_get_reader_by_id(0);
+    VReaderStatus status;
+    int dwRecvLength = APDUBufSize;
+    uint8_t pbRecvBuffer[APDUBufSize];
+    uint8_t apdu[] = {
+        0x00, 0x42, 0x00, 0xff, 0x00
+    };
+    int apdu_len = 5;
+
+    g_assert_nonnull(reader);
+
+    select_applet(reader, TEST_PKI);
+
+    /* Sign/Decipher requires P2 = 0 */
+    status = vreader_xfr_bytes(reader,
+                               apdu, apdu_len,
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[0], ==, 0x6a);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x86);
+
+    /* Sign/Decipher requires P1 = 0x00 or 0x80 */
+    apdu[3] = 0xff;
+    apdu[4] = 0x00;
+    status = vreader_xfr_bytes(reader,
+                               apdu, apdu_len,
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[0], ==, 0x6a);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x86);
+
+    vreader_free(reader); /* get by id ref */
+}
+
 static void test_invalid_acr(void)
 {
     VReader *reader = vreader_get_reader_by_id(0);
@@ -1070,6 +1151,17 @@ static void test_invalid_acr(void)
     g_assert_cmpint(pbRecvBuffer[0], ==, VCARD7816_SW1_COMMAND_ERROR);
     g_assert_cmpint(pbRecvBuffer[1], ==, 0x84);
 
+    /* Any other P1 is invalid */
+    apdu[2] = 0x42;
+    dwRecvLength = APDUBufSize;
+    status = vreader_xfr_bytes(reader,
+                               apdu, 6,
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[0], ==, VCARD7816_SW1_COMMAND_ERROR);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);
+
 
     vreader_free(reader); /* get by id ref */
 }
@@ -1170,6 +1262,8 @@ int main(int argc, char *argv[])
     g_test_add_func("/libcacard/invalid-select-apdu", test_invalid_select);
     g_test_add_func("/libcacard/invalid-instruction", test_invalid_instruction);
     g_test_add_func("/libcacard/invalid-read-buffer", test_invalid_read_buffer);
+    g_test_add_func("/libcacard/invalid-update-buffer", test_invalid_update_buffer);
+    g_test_add_func("/libcacard/invalid-sign", test_invalid_sign);
     g_test_add_func("/libcacard/invalid-acr", test_invalid_acr);
     g_test_add_func("/libcacard/get-atr", test_atr);
     /* Even without the card, the passthrough applets are present */
