@@ -442,7 +442,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/hw-tests/list", test_list);
     g_test_add_func("/hw-tests/passthrough-applet", test_passthrough_applets);
     g_test_add_func("/hw-tests/check-login-count", check_login_count);
-    g_test_add_func("/hw-tests/msft-applet", check_login_count);
+    g_test_add_func("/hw-tests/msft-applet", test_msft_applet);
     g_test_add_func("/hw-tests/gp-applet", test_gp_applet);
     g_test_add_func("/hw-tests/login", test_login);
     g_test_add_func("/hw-tests/sign", test_sign);
