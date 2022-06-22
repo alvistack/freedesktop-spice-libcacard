@@ -980,7 +980,21 @@ void test_msft_applet(void)
      * in select_aid()
      */
 
+    /* ask the applet for unknown data */
+    getdata[2] = 0xff;
+    getdata[3] = 0xff;
+    dwRecvLength = APDUBufSize;
+    status = vreader_xfr_bytes(reader,
+                               getdata, sizeof(getdata),
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[dwRecvLength-2], ==, 0x6a);
+    g_assert_cmpint(pbRecvBuffer[dwRecvLength-1], ==, 0x88);
+
     /* ask the applet for our data */
+    getdata[2] = 0x7f;
+    getdata[3] = 0x68;
     dwRecvLength = APDUBufSize;
     status = vreader_xfr_bytes(reader,
                                getdata, sizeof(getdata),
@@ -1070,6 +1084,29 @@ void test_gp_applet(void)
     }
     g_assert_cmpint(equal_bytes, <, 6);
 
+    /* 0x0066 tag should return card registration data */
+    dwRecvLength = APDUBufSize;
+    getdata[2] = 0x00;
+    getdata[3] = 0x66;
+    status = vreader_xfr_bytes(reader,
+                               getdata, sizeof(getdata),
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 53);
+    g_assert_cmpint(pbRecvBuffer[dwRecvLength-2], ==, VCARD7816_SW1_SUCCESS);
+    g_assert_cmpint(pbRecvBuffer[dwRecvLength-1], ==, 0x00);
+
+    /* anything else should fail */
+    dwRecvLength = APDUBufSize;
+    getdata[2] = 0xff;
+    getdata[3] = 0xff;
+    status = vreader_xfr_bytes(reader,
+                               getdata, sizeof(getdata),
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[dwRecvLength-2], ==, 0x6a);
+    g_assert_cmpint(pbRecvBuffer[dwRecvLength-1], ==, 0x88);
     vreader_free(reader); /* get by id ref */
 }
 

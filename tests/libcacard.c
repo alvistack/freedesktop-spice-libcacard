@@ -838,6 +838,19 @@ static void test_invalid_select(void)
     g_assert_cmpint(pbRecvBuffer[0], ==, VCARD7816_SW1_COMMAND_ERROR);
     g_assert_cmpint(pbRecvBuffer[1], ==, 0x84);
 
+    /* The generic code handles only P1 = 0x04 */
+    select_gp(reader);
+
+    selfile[2] = 0xff;
+    dwRecvLength = APDUBufSize;
+    status = vreader_xfr_bytes(reader,
+                               selfile, sizeof(selfile),
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[0], ==, 0x6a);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x81);
+
     /* TODO check the iso7816 code handling the remaining SELECT APDUs */
 
     vreader_free(reader); /* get by id ref */
@@ -858,15 +871,15 @@ static void test_invalid_instruction(void)
     /* Card Capability Container */
     select_applet(reader, TEST_CCC);
 
-    /* 0xFF is invalid instruction everywhere, but fails in apdu_ins_to_string() */
-    /*dwRecvLength = APDUBufSize;
+    /* 0xFF is invalid instruction everywhere */
+    dwRecvLength = APDUBufSize;
     status = vreader_xfr_bytes(reader,
                                apdu, sizeof(apdu),
                                pbRecvBuffer, &dwRecvLength);
     g_assert_cmpint(status, ==, VREADER_OK);
     g_assert_cmpint(dwRecvLength, ==, 2);
     g_assert_cmpint(pbRecvBuffer[0], ==, VCARD7816_SW1_INS_ERROR);
-    g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);*/
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);
 
     /* CCC Applet does not know GET ACR instruction */
     apdu[1] = 0x4c;
@@ -881,12 +894,11 @@ static void test_invalid_instruction(void)
 
     /* TODO check the iso7816 code handling the remaining SELECT APDUs */
 
+    /* GP applet sends most of the instructions to the generic ISO handling */
+    select_gp(reader);
 
-    /* PKI Applet */
-    select_applet(reader, TEST_PKI);
-
-    /* Update Buffer is not supported */
-    apdu[1] = 0x58;
+    /* Secure messaging instructions not supported */
+    apdu[1] = 0x70;
     dwRecvLength = APDUBufSize;
     status = vreader_xfr_bytes(reader,
                                apdu, sizeof(apdu),
@@ -894,8 +906,18 @@ static void test_invalid_instruction(void)
     g_assert_cmpint(status, ==, VREADER_OK);
     g_assert_cmpint(dwRecvLength, ==, 2);
     g_assert_cmpint(pbRecvBuffer[0], ==, VCARD7816_SW1_COMMAND_ERROR);
-    g_assert_cmpint(pbRecvBuffer[1], ==, 0x85);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);
 
+    /* 0xFF is invalid instruction also in the global APDU processing */
+    apdu[1] = 0xff;
+    dwRecvLength = APDUBufSize;
+    status = vreader_xfr_bytes(reader,
+                               apdu, sizeof(apdu),
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[0], ==, 0x69);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);
     vreader_free(reader); /* get by id ref */
 }
 
