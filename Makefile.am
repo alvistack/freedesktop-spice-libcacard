@@ -88,6 +88,7 @@ AM_TESTS_ENVIRONMENT += \
 test_programs =					\
 	tests/unit_cac				\
 	tests/libcacard				\
+	tests/atr				\
 	tests/simpletlv				\
 	tests/hwtests				\
 	tests/initialize			\
@@ -112,6 +113,12 @@ tests_libcacard_LDADD =				\
 	src/simpletlv.lo			\
 	$(NULL)
 
+tests_atr_LDADD =				\
+	$(GLIB2_LIBS)				\
+	src/common.lo				\
+	libcacard.la				\
+	$(NULL)
+
 tests_simpletlv_LDADD =				\
 	$(GLIB2_LIBS)				\
 	libcacard.la				\
@@ -131,6 +138,7 @@ tests_hwtests_LDADD =				\
 	src/simpletlv.lo			\
 	$(NULL)
 tests_hwtests_DEPENDENCIES = tests/softhsm2.conf
+
 tests_initialize_SOURCES =			\
 	tests/initialize.c			\
 	$(NULL)

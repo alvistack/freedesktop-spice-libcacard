@@ -37,6 +37,19 @@ test(
   env: env,
 )
 
+atr_test = executable(
+  'atr',
+  ['atr.c', 'common.c'],
+  objects: libcacard.extract_objects('src/common.c', 'src/simpletlv.c'),
+  dependencies: [libcacard_dep],
+)
+
+test(
+  'atr',
+  atr_test,
+  env: env,
+)
+
 simpletlv_test = executable(
   'simpletlv',
   ['simpletlv.c'],
