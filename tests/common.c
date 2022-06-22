@@ -1009,24 +1009,18 @@ void test_msft_applet(void)
     vreader_free(reader); /* get by id ref */
 }
 
-void test_gp_applet(void)
+void select_gp(VReader *reader)
 {
     int dwRecvLength = APDUBufSize;
     VReaderStatus status;
     uint8_t pbRecvBuffer[APDUBufSize];
-    uint8_t gp_aid[] = {
-        0xA0, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00
-    };
     uint8_t getresp[] = {
         /* Get Response (max we can get) */
         0x00, 0xc0, 0x00, 0x00, 0x00
     };
-    uint8_t getdata[] = {
-        /* Get Data (max we can get) */
-        0x00, 0xca, 0x9f, 0x7f, 0x00
+    uint8_t gp_aid[] = {
+        0xA0, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00
     };
-    VReader *reader = vreader_get_reader_by_id(0);
-    unsigned int equal_bytes = 0, n;
 
     /* select GP and wait for the response bytes */
     select_aid_response(reader, gp_aid, sizeof(gp_aid), 0x1b);
@@ -1040,6 +1034,21 @@ void test_gp_applet(void)
     g_assert_cmpint(dwRecvLength, >, 2);
     g_assert_cmphex(pbRecvBuffer[dwRecvLength-2], ==, VCARD7816_SW1_SUCCESS);
     g_assert_cmphex(pbRecvBuffer[dwRecvLength-1], ==, 0x00);
+}
+
+void test_gp_applet(void)
+{
+    int dwRecvLength = APDUBufSize;
+    VReaderStatus status;
+    uint8_t pbRecvBuffer[APDUBufSize];
+    uint8_t getdata[] = {
+        /* Get Data (max we can get) */
+        0x00, 0xca, 0x9f, 0x7f, 0x00
+    };
+    VReader *reader = vreader_get_reader_by_id(0);
+    unsigned int equal_bytes = 0, n;
+
+    select_gp(reader);
 
     /* We made sure the selection of other applets does not return anything
      * in select_aid()

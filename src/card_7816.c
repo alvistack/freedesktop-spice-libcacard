@@ -786,7 +786,7 @@ vcard_process_apdu(VCard *card, VCardAPDU *apdu, VCardResponse **response)
     VCardBufferResponse *buffer_response;
 
     /* first handle any PTS commands, which aren't really APDU's */
-    if (apdu->a_type == VCARD_7816_PTS) {
+    if (apdu->a_gen_type == VCARD_7816_PTS) {
         /* the PTS responses aren't really responses either */
         *response = vcard_response_new_data(apdu->a_data, apdu->a_len);
         /* PTS responses have no status bytes */

@@ -49,6 +49,8 @@ void test_get_response(void);
 
 void check_login_count(void);
 
+void select_gp(VReader *reader);
+
 void test_msft_applet(void);
 void test_gp_applet(void);
 

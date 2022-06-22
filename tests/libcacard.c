@@ -686,6 +686,31 @@ static void test_select_coid(void)
     vreader_free(reader); /* get by id ref */
 }
 
+static void test_invalid_apdu(void)
+{
+    VReader *reader = vreader_get_reader_by_id(0);
+    VReaderStatus status;
+    int dwRecvLength = APDUBufSize;
+    uint8_t pbRecvBuffer[APDUBufSize];
+    uint8_t apdu[] = {
+        0x00, 0x00, 0x01
+    };
+    size_t apdu_len = 3;
+
+    g_assert_nonnull(reader);
+
+    dwRecvLength = APDUBufSize;
+    status = vreader_xfr_bytes(reader,
+                               apdu, apdu_len,
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[0], ==, 0x67);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);
+
+    vreader_free(reader); /* get by id ref */
+}
+
 static void test_invalid_properties(void)
 {
     VReader *reader = vreader_get_reader_by_id(0);
@@ -1045,6 +1070,57 @@ static void test_invalid_sign(void)
     vreader_free(reader); /* get by id ref */
 }
 
+static void test_invalid_class(void)
+{
+    VReader *reader = vreader_get_reader_by_id(0);
+    VReaderStatus status;
+    int dwRecvLength = APDUBufSize;
+    uint8_t pbRecvBuffer[APDUBufSize];
+    uint8_t apdu[] = {
+        0xfe, 0x42, 0x00, 0xff, 0x00
+    };
+    int apdu_len = 5;
+
+    g_assert_nonnull(reader);
+
+    select_gp(reader);
+
+    /* Only ISO 7816 class(es) supported. Anything else should fail */
+    status = vreader_xfr_bytes(reader,
+                               apdu, apdu_len,
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[0], ==, 0x69);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);
+
+    /*  ISO 7816 PTS class is even more special -- it should just reply with the "APDU" sent */
+    apdu[0] = 0xff;
+    dwRecvLength = APDUBufSize;
+    status = vreader_xfr_bytes(reader,
+                               apdu, apdu_len,
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 5);
+    g_assert_cmpint(pbRecvBuffer[0], ==, 0xff);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x42);
+    g_assert_cmpint(pbRecvBuffer[2], ==, 0x00);
+    g_assert_cmpint(pbRecvBuffer[3], ==, 0xff);
+    g_assert_cmpint(pbRecvBuffer[4], ==, 0x00);
+
+    /* 0x0e should be unsupported secure messaging */
+    apdu[0] = 0x0e;
+    status = vreader_xfr_bytes(reader,
+                               apdu, apdu_len,
+                               pbRecvBuffer, &dwRecvLength);
+    g_assert_cmpint(status, ==, VREADER_OK);
+    g_assert_cmpint(dwRecvLength, ==, 2);
+    g_assert_cmpint(pbRecvBuffer[0], ==, 0x68);
+    g_assert_cmpint(pbRecvBuffer[1], ==, 0x82);
+
+    vreader_free(reader); /* get by id ref */
+}
+
 static void test_invalid_acr(void)
 {
     VReader *reader = vreader_get_reader_by_id(0);
@@ -1162,7 +1238,6 @@ static void test_invalid_acr(void)
     g_assert_cmpint(pbRecvBuffer[0], ==, VCARD7816_SW1_COMMAND_ERROR);
     g_assert_cmpint(pbRecvBuffer[1], ==, 0x00);
 
-
     vreader_free(reader); /* get by id ref */
 }
 
@@ -1258,6 +1333,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/libcacard/empty-applets", test_empty_applets);
     g_test_add_func("/libcacard/gp-applet", test_gp_applet);
     g_test_add_func("/libcacard/msft-applet", test_msft_applet);
+    g_test_add_func("/libcacard/invalid-apdu", test_invalid_apdu);
     g_test_add_func("/libcacard/invalid-properties-apdu", test_invalid_properties);
     g_test_add_func("/libcacard/invalid-select-apdu", test_invalid_select);
     g_test_add_func("/libcacard/invalid-instruction", test_invalid_instruction);
@@ -1265,6 +1341,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/libcacard/invalid-update-buffer", test_invalid_update_buffer);
     g_test_add_func("/libcacard/invalid-sign", test_invalid_sign);
     g_test_add_func("/libcacard/invalid-acr", test_invalid_acr);
+    g_test_add_func("/libcacard/invalid-class", test_invalid_class);
     g_test_add_func("/libcacard/get-atr", test_atr);
     /* Even without the card, the passthrough applets are present */
     g_test_add_func("/libcacard/passthrough-applet", test_passthrough_applet);
