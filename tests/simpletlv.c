@@ -98,6 +98,55 @@ static void test_length_skipped(void)
     g_assert_cmpint(length, ==, 2);
 }
 
+/* Test that we can encode zero-length values into Simple TLV */
+static void test_encode_zero(void)
+{
+    unsigned char *result = NULL, *p = NULL;
+    int result_len = 0;
+    unsigned char empty_value[] = "";
+    unsigned char empty_encoded[] = "\x25\x00";
+    static struct simpletlv_member simple[1] = {
+      {0x25, 0, {/*.value = empty_value*/}, SIMPLETLV_TYPE_LEAF}
+    };
+    simple[0].value.value = empty_value;
+
+    /* Encode simple short TLV with automatic allocation */
+    result = NULL;
+    result_len = simpletlv_encode(simple, 1, &result, 0, NULL);
+    g_assert_cmpmem(result, result_len, empty_encoded, 2);
+    g_free(result);
+
+    /* Encode simple short TLV with pre-allocated buffer (long enough) */
+    result = g_malloc(10);
+    result_len = simpletlv_encode(simple, 1, &result, 10, NULL);
+    g_assert_cmpmem(result, result_len, empty_encoded, 2);
+    g_free(result);
+
+    /* Encode simple short TLV with pre-allocated buffer (too short) */
+    result = g_malloc(1);
+    result_len = simpletlv_encode(simple, 1, &result, 1, NULL);
+    g_assert_cmpint(result_len, ==, -1);
+    g_free(result);
+
+    /* Encode only TL part */
+    result = NULL;
+    result_len = simpletlv_encode_tl(simple, 1, &result, 0, NULL);
+    g_assert_cmpmem(result, result_len, "\x25\x00", 2);
+    g_free(result);
+
+    /* Encode only VALUE part (equals to the value itself) */
+    result = NULL;
+    result_len = simpletlv_encode_val(simple, 1, &result, 0, NULL);
+    g_assert_cmpmem(result, result_len, empty_value, 0);
+    g_free(result);
+
+    /* Encode only empty VALUE part with pre-allocated buffer (long enough) */
+    result = g_malloc(10);
+    result_len = simpletlv_encode_val(simple, 1, &result, 10, &p);
+    g_assert_cmpmem(result, result_len, empty_value, 0);
+    g_free(result);
+}
+
 /* Test that we can encode arbitrary data into Simple TLV */
 static void test_encode_simple(void)
 {
@@ -358,6 +407,7 @@ int main(int argc, char *argv[])
     g_test_add_func("/simpletlv/length/simple", test_length_simple);
     g_test_add_func("/simpletlv/length/nested", test_length_nested);
     g_test_add_func("/simpletlv/length/skipped", test_length_skipped);
+    g_test_add_func("/simpletlv/encode/zero", test_encode_zero);
     g_test_add_func("/simpletlv/encode/simple", test_encode_simple);
     g_test_add_func("/simpletlv/encode/nested", test_encode_nested);
     g_test_add_func("/simpletlv/encode/skipped", test_encode_skipped);
