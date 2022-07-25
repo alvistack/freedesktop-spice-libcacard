@@ -73,7 +73,12 @@ libcacard_dep = declare_dependency(
   dependencies: [glib_dep, nss_dep, pcsc_dep],
 )
 
-executable('vscclient', 'src/vscclient.c', dependencies: [libcacard_dep])
+ws2_32_dep = dependency('', required: false)
+if host_machine.system() == 'windows'
+  ws2_32_dep = cc.find_library('ws2_32', required : true)
+endif
+
+executable('vscclient', 'src/vscclient.c', dependencies: [libcacard_dep, ws2_32_dep])
 
 configure_file(
   output: 'config.h',
