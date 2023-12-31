@@ -1,0 +1,8 @@
+*.substvars
+*debhelper*
+.debhelper
+autoreconf.*
+files
+libcacard-dev
+libcacard0
+tmp

@@ -1,0 +1,4 @@
+libcacard source: file-without-copyright-information
+libcacard source: no-debian-changes
+libcacard source: not-binnmuable-any-depends-any
+libcacard source: weak-library-dev-dependency
