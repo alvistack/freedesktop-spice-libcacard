@@ -14,7 +14,7 @@
 
 struct acr_applet a = {
     .id = 0x42, .num_objects = 1, .objects = {
-            {.id = "\xab\xcd", .num_ins = 1, .ins = {
+            {.id = {0xab, 0xcd}, .num_ins = 1, .ins = {
                 {.code = 0x01, .acrid = 0x02, .config = ACR_INS_CONFIG_P2, .p1 = 0x03, .p2 = 0x04, .data1 = 0x05}
             }
         }

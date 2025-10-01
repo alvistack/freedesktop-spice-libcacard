@@ -291,29 +291,29 @@ struct service_applet_table {
 static const struct service_applet_table service_table = {
     22, 12, {
         /* Variable PKI applets entries */
-        {0x61, 7, "\xA0\x00\x00\x00\x79\x01\x00"},
-        {0x62, 7, "\xA0\x00\x00\x00\x79\x01\x01"},
-        {0x63, 7, "\xA0\x00\x00\x00\x79\x01\x02"},
-        {0x64, 7, "\xA0\x00\x00\x00\x79\x01\x03"},
-        {0x65, 7, "\xA0\x00\x00\x00\x79\x01\x04"},
-        {0x66, 7, "\xA0\x00\x00\x00\x79\x01\x05"},
-        {0x67, 7, "\xA0\x00\x00\x00\x79\x01\x06"},
-        {0x68, 7, "\xA0\x00\x00\x00\x79\x01\x07"},
-        {0x69, 7, "\xA0\x00\x00\x00\x79\x01\x08"},
-        {0x6a, 7, "\xA0\x00\x00\x00\x79\x01\x09"},
+        {0x61, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x00}},
+        {0x62, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x01}},
+        {0x63, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x02}},
+        {0x64, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x03}},
+        {0x65, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x04}},
+        {0x66, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x05}},
+        {0x67, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x06}},
+        {0x68, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x07}},
+        {0x69, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x08}},
+        {0x6a, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x01, 0x09}},
         /* static applet entries */
-        {0x40, 7, "\xA0\x00\x00\x01\x16\x30\x00"},
-        {0x4F, 7, "\xA0\x00\x00\x01\x16\xDB\x00"},
-        {0x4B, 7, "\xA0\x00\x00\x00\x79\x02\xFB"},
-        {0x41, 7, "\xA0\x00\x00\x00\x79\x02\x00"},
-        {0x42, 7, "\xA0\x00\x00\x00\x79\x02\x01"},
-        {0x4E, 7, "\xA0\x00\x00\x00\x79\x02\xFE"},
-        {0x4D, 7, "\xA0\x00\x00\x00\x79\x02\xFD"},
-        {0x50, 7, "\xA0\x00\x00\x00\x79\x02\xF2"},
-        {0x51, 7, "\xA0\x00\x00\x00\x79\x02\xF0"},
-        {0x52, 7, "\xA0\x00\x00\x00\x79\x02\xF1"},
-        {0x44, 7, "\xA0\x00\x00\x00\x79\x12\x01"},
-        {0x45, 7, "\xA0\x00\x00\x00\x79\x12\x02"},
+        {0x40, 7, {0xA0, 0x00, 0x00, 0x01, 0x16, 0x30, 0x00}},
+        {0x4F, 7, {0xA0, 0x00, 0x00, 0x01, 0x16, 0xDB, 0x00}},
+        {0x4B, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x02, 0xFB}},
+        {0x41, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x02, 0x00}},
+        {0x42, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x02, 0x01}},
+        {0x4E, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x02, 0xFE}},
+        {0x4D, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x02, 0xFD}},
+        {0x50, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x02, 0xF2}},
+        {0x51, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x02, 0xF0}},
+        {0x52, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x02, 0xF1}},
+        {0x44, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x12, 0x01}},
+        {0x45, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x12, 0x02}},
     }
 };
 
@@ -449,208 +449,208 @@ static const struct acr_applets applets_table = {
     23, 13, {
         /* Dynamic PKI applets */
         {0x61, 2, {
-            {"\x01\x00", 3, {
+            {{0x01, 0x00}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x62, 2, {
-            {"\x01\x01", 3, {
+            {{0x01, 0x01}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x63, 2, {
-            {"\x01\x02", 3, {
+            {{0x01, 0x02}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x64, 2, {
-            {"\x01\x03", 3, {
+            {{0x01, 0x03}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x65, 2, {
-            {"\x01\x04", 3, {
+            {{0x01, 0x04}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x66, 2, {
-            {"\x01\x05", 3, {
+            {{0x01, 0x05}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x67, 2, {
-            {"\x01\x06", 3, {
+            {{0x01, 0x06}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x68, 2, {
-            {"\x01\x07", 3, {
+            {{0x01, 0x07}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x69, 2, {
-            {"\x01\x08", 3, {
+            {{0x01, 0x08}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x6a, 2, {
-            {"\x01\x09", 3, {
+            {{0x01, 0x09}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {CAC_SIGN_DECRYPT, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         /* Static applets */
         {0x1F, 1, {
-            {"\xFF\xFF", 1, {
+            {{0xFF, 0xFF}, 1, {
                 {VCARD7816_INS_VERIFY, 0x00, .config = ACR_INS_CONFIG_NONE}
             }}
         }},
         {0xF4, 2, {
-            {"\xDB\x00", 2, {
+            {{0xDB, 0x00}, 2, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x4B, 2, {
-            {"\x02\xFB", 2, {
+            {{0x02, 0xFB}, 2, {
                 {CAC_UPDATE_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x41, 2, {
-            {"\x02\x00", 3, {
+            {{0x02, 0x00}, 3, {
                 {CAC_UPDATE_BUFFER, 0x09, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_DATA1, .data1 = 0x01},
                 {CAC_READ_BUFFER, 0x08, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x42, 2, {
-            {"\x02\x01", 3, {
+            {{0x02, 0x01}, 3, {
                 {CAC_UPDATE_BUFFER, 0x0B, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_DATA1, .data1=0x01},
                 {CAC_READ_BUFFER, 0x0A, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x40, 5, {
-            {"\x30\x00", 3, {
+            {{0x30, 0x00}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_READ_BINARY, 0x00, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\x60\x10", 3, {
+            {{0x60, 0x10}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_DATA1, .data1 = 0x01},
                 {CAC_READ_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\x60\x30", 3, {
+            {{0x60, 0x30}, 3, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_DATA1, .data1 = 0x01},
                 {CAC_READ_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\x90\x00", 2, {
+            {{0x90, 0x00}, 2, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x4e, 2, {
-            {"\x02\xFE", 2, {
+            {{0x02, 0xFE}, 2, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x4d, 2, {
-            {"\x02\xFD", 3, {
+            {{0x02, 0xFD}, 3, {
                 {CAC_UPDATE_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_DATA1, .data1 = 0x01},
                 {CAC_READ_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x50, 1, {
-            {"\xFF\xFF", 5, {
+            {{0xFF, 0xFF}, 5, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
@@ -659,7 +659,7 @@ static const struct acr_applets applets_table = {
             }}
         }},
         {0x51, 1, {
-            {"\xFF\xFF", 5, {
+            {{0xFF, 0xFF}, 5, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
@@ -668,7 +668,7 @@ static const struct acr_applets applets_table = {
             }}
         }},
         {0x52, 1, {
-            {"\xFF\xFF", 5, {
+            {{0xFF, 0xFF}, 5, {
                 {CAC_UPDATE_BUFFER, 0x04, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
@@ -677,24 +677,24 @@ static const struct acr_applets applets_table = {
             }}
         }},
         {0x44, 2, {
-            {"\x12\x01", 3, {
+            {{0x12, 0x01}, 3, {
                 {CAC_UPDATE_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_DATA1, .data1 = 0x01},
                 {CAC_READ_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
             }}
         }},
         {0x45, 2, {
-            {"\x12\x02", 3, {
+            {{0x12, 0x02}, 3, {
                 {CAC_UPDATE_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE},
                 {CAC_READ_BUFFER, 0x00, .config = ACR_INS_CONFIG_DATA1, .data1 = 0x01},
                 {CAC_READ_BUFFER, 0x06, .config = ACR_INS_CONFIG_NONE}
             }},
-            {"\xFF\xFF", 3, {
+            {{0xFF, 0xFF}, 3, {
                 {VCARD7816_INS_EXTERNAL_AUTHENTICATE, 0x11, .config = ACR_INS_CONFIG_P1, .p1 = 0x00},
                 {VCARD7816_INS_GET_CHALLENGE, 0x11, .config = ACR_INS_CONFIG_NONE},
                 {VCARD7816_INS_VERIFY, 0x10, .config = ACR_INS_CONFIG_NONE},
@@ -946,9 +946,9 @@ struct amp_table {
 
 static const struct amp_table amp_table = {
     3, {
-        {0x1F, 7, "\xA0\x00\x00\x00\x79\x03\x00"},
-        {0x1E, 7, "\xA0\x00\x00\x00\x79\x03\x00"},
-        {0x1D, 7, "\xA0\x00\x00\x00\x79\x03\x00"},
+        {0x1F, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x03, 0x00}},
+        {0x1E, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x03, 0x00}},
+        {0x1D, 7, {0xA0, 0x00, 0x00, 0x00, 0x79, 0x03, 0x00}},
     }
 };
 
