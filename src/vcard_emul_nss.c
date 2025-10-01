@@ -1353,6 +1353,10 @@ vcard_emul_options(const char *args)
             for (i = 0; i < count; i++) {
                 const char *cert = args;
                 args = strpbrk(args, ",)");
+                if (args == NULL || *args == 0) {
+                    fprintf(stderr, "Error: missing cert name.\n");
+                    goto fail;
+                }
                 vreaderOpt->cert_name[i] = g_strndup(cert, args - cert);
                 args = strip(args+1);
             }
