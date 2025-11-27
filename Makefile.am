@@ -47,7 +47,7 @@ libcacard_include_HEADERS =			\
 	src/vscard_common.h			\
 	$(NULL)
 
-libcacard_la_LIBADD = $(GLIB2_LIBS) $(CACARD_LIBS) $(PCSC_LIBS)
+libcacard_la_LIBADD = $(GLIB2_LIBS) $(CACARD_LIBS) $(PCSC_LIBS) $(CODE_COVERAGE_LIBS)
 libcacard_la_LDFLAGS =						\
 	-Wl,--version-script,$(srcdir)/src/libcacard.map	\
 	-no-undefined						\
@@ -66,7 +66,7 @@ include $(srcdir)/build-aux/glib-tap.mk
 
 noinst_PROGRAMS += vscclient
 vscclient_SOURCES = src/vscclient.c
-vscclient_LDADD = libcacard.la $(GLIB2_LIBS) $(PCSC_LIBS)
+vscclient_LDADD = libcacard.la $(GLIB2_LIBS) $(PCSC_LIBS) $(CODE_COVERAGE_LIBS)
 vscclient_CFLAGS = $(AM_CPPFLAGS) $(GLIB2_CFLAGS) $(PCSC_CFLAGS)
 
 if OS_WIN32
@@ -96,6 +96,7 @@ test_programs =					\
 
 tests_unit_cac_LDADD =				\
 	$(GLIB2_LIBS)				\
+	$(CODE_COVERAGE_LIBS)			\
 	libcacard.la				\
 	src/common.lo				\
 	src/simpletlv.lo			\
@@ -108,6 +109,7 @@ tests_libcacard_SOURCES =			\
 	$(NULL)
 tests_libcacard_LDADD =				\
 	$(GLIB2_LIBS)				\
+	$(CODE_COVERAGE_LIBS)			\
 	libcacard.la				\
 	src/common.lo				\
 	src/simpletlv.lo			\
@@ -115,12 +117,14 @@ tests_libcacard_LDADD =				\
 
 tests_atr_LDADD =				\
 	$(GLIB2_LIBS)				\
+	$(CODE_COVERAGE_LIBS)			\
 	src/common.lo				\
 	libcacard.la				\
 	$(NULL)
 
 tests_simpletlv_LDADD =				\
 	$(GLIB2_LIBS)				\
+	$(CODE_COVERAGE_LIBS)			\
 	libcacard.la				\
 	src/common.lo				\
 	src/simpletlv.lo			\
@@ -133,6 +137,7 @@ tests_hwtests_SOURCES =				\
 	$(NULL)
 tests_hwtests_LDADD =				\
 	$(GLIB2_LIBS)				\
+	$(CODE_COVERAGE_LIBS)			\
 	libcacard.la				\
 	src/common.lo				\
 	src/simpletlv.lo			\
@@ -144,6 +149,7 @@ tests_initialize_SOURCES =			\
 	$(NULL)
 tests_initialize_LDADD =			\
 	$(GLIB2_LIBS)				\
+	$(CODE_COVERAGE_LIBS)			\
 	libcacard.la				\
 	$(NULL)
 
@@ -159,7 +165,7 @@ AM_CPPFLAGS =					\
 	$(WARN_CFLAGS)				\
 	-I$(srcdir)/src				\
 	$(NULL)
-AM_LDFLAGS = $(CODE_COVERAGE_LIBS) $(WARN_LDFLAGS)
+AM_LDFLAGS = $(WARN_LDFLAGS)
 
 MESON_FILES =					\
 	meson_options.txt			\
