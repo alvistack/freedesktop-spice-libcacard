@@ -1,3 +1,11 @@
+v2.8.2
+======
+ - Sort certificates by underlying objects CKA_ID to provide deterministic
+   object order
+ - Avoid using uninitialized memory
+ - Improve test coverage and build scripts
+ - Improve compatibility with modern compilers (avoid strict warnings)
+
 v2.8.1
 ======
  - Improve CI and build scripts
