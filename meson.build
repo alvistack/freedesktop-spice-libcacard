@@ -88,7 +88,7 @@ pc.generate(
   requires: ['glib-2.0'],
   requires_private: ['nss'],
   subdirs: 'cacard',
-  version: meson.project_version(),
+  version: '2.8.1',
   name: 'cacard',
   filebase: 'libcacard',
   description: 'CAC (Common Access Card) library',

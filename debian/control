@@ -1,0 +1,45 @@
+Source: libcacard
+Section: otherosfs
+Priority: optional
+Standards-Version: 4.5.0
+Maintainer: Wong Hoi Sing Edison <hswong3i@pantarei-design.com>
+Homepage: https://github.com/freedesktop/spice-libcacard/tags
+Vcs-Browser: https://github.com/alvistack/freedesktop-spice-libcacard
+Vcs-Git: https://github.com/alvistack/freedesktop-spice-libcacard.git
+Build-Depends:
+ debhelper,
+ debhelper-compat (= 10),
+ gnutls-bin,
+ libglib2.0-dev (>= 2.22~),
+ libnss3-dev (>= 3.12.8~),
+ libnss3-tools,
+ libtool,
+ meson,
+ ninja-build,
+ opensc,
+ openssl,
+ pkg-config,
+
+Package: libcacard0
+Section: libs
+Architecture: amd64
+Description: Virtual Common Access Card (CAC) Emulator (runtime library)
+ This emulator is designed to provide emulation of actual smart cards to a
+ virtual card reader running in a guest virtual machine. The emulated smart
+ cards can be representations of real smart cards, where the necessary
+ functions such as signing, card removal/insertion, etc. are mapped to real,
+ physical cards which are shared with the client machine the emulator is
+ running on, or the cards could be pure software constructs.
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+
+Package: libcacard-dev
+Section: libdevel
+Architecture: amd64
+Description: Virtual Common Access Card (CAC) Emulator (development files)
+ This package provides files necessary to develop programs using the library.
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+ libcacard0 (= ${source:Version}),

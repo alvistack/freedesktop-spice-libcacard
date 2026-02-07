@@ -1,0 +1,11 @@
+Makefile.in
+aclocal.m4
+aminclude_static.am
+autom4te.cache/
+build-aux/
+config.h.in
+config.h.in~
+configure
+configure~
+m4/
+src/Makefile.in
