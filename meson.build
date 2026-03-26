@@ -92,7 +92,7 @@ pc.generate(
   libraries: libcacard,
   requires_private: ['glib-2.0'],
   subdirs: 'cacard',
-  version: meson.project_version(),
+  version: '2.8.2',
   name: 'cacard',
   filebase: 'libcacard',
   description: 'CAC (Common Access Card) library',
